@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+    <bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration"/>
+    <bean class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:usePool="true">
+
+        <constructor-arg ref="sentinelConfig"/>
+    </bean>
+
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig"/>
+
+    <bean id="sentinelConfig"
+          class="org.springframework.data.redis.connection.RedisSentinelConfiguration">
+        <constructor-arg name="master" value="master"/>
+        <constructor-arg name="sentinelHostAndPorts">
+            <set>
+                <value>127.0.0.1:26379</value>
+                <value>127.0.0.1:26380</value>
+            </set>
+        </constructor-arg>
+    </bean>
+    <!--
+    <bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate"/>
+-->
+</beans>
